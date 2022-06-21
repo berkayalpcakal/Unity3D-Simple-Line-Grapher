@@ -206,14 +206,21 @@ namespace LineGrapher
 
             if (_data.Count != 0)
             {
-                GL.Begin(GL.LINE_STRIP);
-                GL.Color(_color);
 
                 int max_iter = _data.Count > windowRectangle.width ? (int)windowRectangle.width : _data.Count;
 
                 for (int i = 0; i < max_iter; i++)
-                    GL.Vertex3(windowRectangle.width - i, MapValueToRectangleWindow(_data[_data.Count - 1 - i], _graphConfig.VerticalAxisYmax, _graphConfig.VerticalAxisYmin), 0);
+                {
+                    if (_data[_data.Count - 1 - i] <= _graphConfig.VerticalAxisYmax && _data[_data.Count - 1 - i] >= _graphConfig.VerticalAxisYmin)
+                    {
+                        GL.Begin(GL.LINE_STRIP);
+                        GL.Color(_color);
+                        GL.Vertex3(windowRectangle.width - i, MapValueToRectangleWindow(_data[_data.Count - 1 - i], _graphConfig.VerticalAxisYmax, _graphConfig.VerticalAxisYmin), 0);
 
+                    }
+                    else
+                        GL.End();
+                }
                 GL.End();
             }
 
